@@ -3,6 +3,7 @@ package com.shiyou.arbitrage.cache;
 
 import com.shiyou.arbitrage.data.model.UserCoinAccount;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -15,13 +16,18 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CoinAccountCache {
 
-    private static Map<String, UserCoinAccount> map = new ConcurrentHashMap<>();
+    private static Map<String, Map<String, UserCoinAccount>> map = new ConcurrentHashMap<>();
 
-    public static UserCoinAccount getCoinAccount(String symbol) {
-        return map.get(symbol);
+    public static UserCoinAccount getCoinAccount(String platform, String symbol) {
+        Map<String, UserCoinAccount> accountMap = map.get(platform);
+        return accountMap.get(symbol);
     }
 
-    public static void update(String symbol, UserCoinAccount coin) {
-        map.put(symbol, coin);
+    public static void update(String platform, String symbol, UserCoinAccount coinAccount) {
+        Map<String, UserCoinAccount> accountMap = map.get(platform);
+        if (accountMap == null){
+            accountMap = new HashMap<>();
+        }
+        accountMap.put(symbol, coinAccount);
     }
 }

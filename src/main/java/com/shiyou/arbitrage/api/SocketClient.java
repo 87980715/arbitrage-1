@@ -26,7 +26,7 @@ public class SocketClient {
     private String url;
 
 
-    public SocketClient(String symbol, String market, String url) {
+    public SocketClient(String market, String symbol, String url) {
         this.symbol = symbol;
         this.market = market;
         this.url = url;
@@ -46,7 +46,7 @@ public class SocketClient {
 
     @OnOpen
     public void open(Session session) {
-        logger.info("Client WebSocket is opening...  " + session);
+        logger.info(market + "    Client WebSocket is opening...  " );
         this.session = session;
         TaskScheduler.start(this, market);
         MessageSubscribe.subscribe(this, market, symbol);
@@ -71,8 +71,9 @@ public class SocketClient {
         t.printStackTrace();
     }
 
-    public void send(String message) {
+    public synchronized void send(String message) {
         this.session.getAsyncRemote().sendText(message);
+        logger.info("订阅信息："+message);
     }
 
     public void close() throws IOException {
