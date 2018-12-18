@@ -9,8 +9,7 @@ public class MessageSubscribe {
         String text = null;
         switch (market) {
             case "Bloex":
-                text = "{c:'s',p:[{t:'trade',l:'" + symbol + "'}]}";
-                client.send(text);
+                text = "{c:'s',p:[{t:'trade',l:'" + symbol + "'}]}";//"{c:'s',p:[{t:'trade',l:'ETHBTC'}]}";
                 break;
             case "Fcoin":
                 text = "{\"cmd\":\"sub\",\"args\":[\"depth.L20." + symbol + "\"]}";

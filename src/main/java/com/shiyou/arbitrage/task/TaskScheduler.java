@@ -11,7 +11,7 @@ public class TaskScheduler {
 
     public static void start(SocketClient client, String market){
         ScheduledExecutorService scheduledExecutorService = new ScheduledThreadPoolExecutor(1, new BasicThreadFactory.Builder().namingPattern("heart-check-%d").daemon(true).build());
-        scheduledExecutorService.scheduleAtFixedRate(new HeartTask(client, market), 1000, 30000, TimeUnit.MILLISECONDS);
+        scheduledExecutorService.scheduleAtFixedRate(new HeartTask(client, market), 5000, 30000, TimeUnit.MILLISECONDS);
     }
 
     public static void startArbitrage(String symbol){

@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 
 import java.math.BigDecimal;
+import java.util.LinkedList;
 
 public class BloexSocketClientHandler extends MyDataHandler {
 
@@ -34,8 +35,7 @@ public class BloexSocketClientHandler extends MyDataHandler {
         JsonObject jsonObject = new JsonParser().parse(message).getAsJsonObject();
 
         if (isHeart(jsonObject)) {
-            JsonElement element = jsonObject.get(HREAT);
-            logger.info(symbol + "收到心跳回复：" + ObjectMapper.toJson(element));
+            logger.info(symbol + "收到心跳回复：" + ObjectMapper.toJson(jsonObject));
         }
         if (isEvent(jsonObject)) {
             String event = jsonObject.get(COMMAND_EVENT).getAsString();
@@ -49,12 +49,12 @@ public class BloexSocketClientHandler extends MyDataHandler {
             } else if (DEAL_RECORD.equals(event)) {
                 BigDecimal lastDealPrice = valueList.get(0).getAsJsonObject().get("p").getAsBigDecimal();
                 LastDealPriceCache.update(symbol, lastDealPrice);
-                //logger.info(symbol + "最新成交记录:" + ObjectMapper.toJson(valueList));
+                logger.info(symbol + "最新成交记录:" + ObjectMapper.toJson(valueList));
             } else if (ALL_ASK.equals(event)) {
                 //最近订单   AllBid=买单，AllAsk=卖单   "s":"类型", //1=买单，2=卖单
-                //updateOrderCache(valueList, symbol, "asks");
+                updateOrderCache(valueList, symbol, "asks");
             } else if (ALL_BID.equals(event)) {
-                //updateOrderCache(valueList, symbol, "bids");
+                updateOrderCache(valueList, symbol, "bids");
             } else if (ORDER.equals(event)) {
 
                 //logger.info(symbol + "最新委托单:" + ObjectMapper.toJson(valueList));
@@ -72,15 +72,15 @@ public class BloexSocketClientHandler extends MyDataHandler {
         return jsonObject.keySet().contains(COMMAND_EVENT);
     }
 
-//    private void updateOrderCache(JsonArray valueList, String symbol, String type) {
-//        LinkedList<BigDecimal[]> linkedList = new LinkedList<>();
-//        for (int i = 0; i < 10; i++) {
-//            JsonObject order = valueList.get(i).getAsJsonObject();
-//            BigDecimal[] bigDecimals = {order.get("p").getAsBigDecimal(), order.get("v").getAsBigDecimal()};
-//            linkedList.add(bigDecimals);
-//        }
-//        logger.info(symbol + "最近订单列表--:" + type + ObjectMapper.toJson(linkedList));
-//    }
+    private void updateOrderCache(JsonArray valueList, String symbol, String type) {
+        LinkedList<BigDecimal[]> linkedList = new LinkedList<>();
+        for (int i = 0; i < 10; i++) {
+            JsonObject order = valueList.get(i).getAsJsonObject();
+            BigDecimal[] bigDecimals = {order.get("p").getAsBigDecimal(), order.get("v").getAsBigDecimal()};
+            linkedList.add(bigDecimals);
+        }
+        logger.info(symbol + "最近订单列表--:" + type + ObjectMapper.toJson(linkedList));
+    }
 
 
 }

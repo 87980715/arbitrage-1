@@ -43,13 +43,13 @@ public class Init {
         String[] coins = symbolCoin.split(",");
 
         loadPlatformInfo();
-        loadBloCoinAccount();
+        loadBloexCoinAccount();
         loadFcoinCoinAccount();
-        loadContractAccount();
+        loadBloexContractAccount();
 
         for (String coin : coins) {
             new SocketClient(BLOEX, coin, PlatformInfoCache.getInfo(BLOEX, "socketUrl")).start();
-            //new SocketClient(FCOIN, coin.toLowerCase(), PlatformInfoCache.getInfo(FCOIN, "socketUrl")).start();
+            new SocketClient(FCOIN, coin.toLowerCase(), PlatformInfoCache.getInfo(FCOIN, "socketUrl")).start();
             //new SocketClient(Contant.COIN58, coin.toLowerCase(), PlatformInfoCache.getInfo(Contant.COIN58, "socketUrl")).start();
             TaskScheduler.startBloexDepth(coin);
             TaskScheduler.startArbitrage(coin);
@@ -59,7 +59,7 @@ public class Init {
     }
 
 
-    private static void loadBloCoinAccount() {
+    private static void loadBloexCoinAccount() {
         Map<String, UserCoinAccount> coinAccountResult = apiService.getCoinAccount().getData();
         Iterator<Map.Entry<String, UserCoinAccount>> iterator = coinAccountResult.entrySet().iterator();
         while (iterator.hasNext()) {
@@ -84,14 +84,14 @@ public class Init {
         }
     }
 
-    private static void loadContractAccount() {
+    private static void loadBloexContractAccount() {
         Map<String, UserContractAccount> contractAccountResult = apiService.getContractAccount().getData();
         Iterator<Map.Entry<String, UserContractAccount>> iterator = contractAccountResult.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, UserContractAccount> next = iterator.next();
             String symbol = next.getKey();
             UserContractAccount userContractAccount = next.getValue();
-            ContractAccountCache.update(symbol, userContractAccount);
+            ContractAccountCache.update(BLOEX, symbol, userContractAccount);
         }
     }
 

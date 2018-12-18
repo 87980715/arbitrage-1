@@ -19,7 +19,7 @@ public class ArbitrageTask extends TimerTask {
 
     private String symbol;
 
-    public ArbitrageTask(String symbol){
+    public ArbitrageTask(String symbol) {
         this.symbol = symbol;
     }
 
@@ -43,21 +43,16 @@ public class ArbitrageTask extends TimerTask {
         BigDecimal bloexSellOnevolume = bloexasks.get(0)[1];//卖一量
         BigDecimal fcoinSellOnePrice = fcoinAsks.get(0)[0];
         BigDecimal fcoinSellOnevolume = fcoinAsks.get(0)[1];
-        System.out.println("blo买一价"+ bloexBuyOnePrice +"----fcoin卖一价"+ fcoinSellOnePrice);
-        System.out.println("fcoin买一价"+ fcoinBuyOnePrice +"----blo卖一价"+ bloexSellOnePrice);
-//        System.out.println("买一价"+ bloexBuyOnePrice +"----"+ fcoinBuyOnePrice);
-//        System.out.println("卖一价"+ bloexSellOnePrice +"----"+ fcoinSellOnePrice);fcoinSellOnePrice
         BigDecimal bloHigh = bloexBuyOnePrice.subtract(fcoinSellOnePrice);
         BigDecimal fcoinHigh = fcoinBuyOnePrice.subtract(bloexSellOnePrice);
-        if (bloHigh.compareTo(new BigDecimal(5)) > 0){
-            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>可以套利："+ bloHigh);
-            System.out.println("blo买一价"+ bloexBuyOnePrice +"----fcoin卖一价"+ fcoinSellOnePrice);
+
+        if (bloHigh.compareTo(new BigDecimal(5)) > 0) {
+            System.out.println("blo买一价" + bloexBuyOnePrice + "---fcoin卖一价" + fcoinSellOnePrice + "---可以套利：" + bloHigh);
+
         }
 
-        if (fcoinHigh.compareTo(new BigDecimal(5)) > 0){
-
-            System.out.println("+++++++++++++++++++++++++++++++++++++++++++++可以套利："+ fcoinHigh);
-            System.out.println("fcoin买一价"+ fcoinBuyOnePrice +"----blo卖一价"+ bloexSellOnePrice);
+        if (fcoinHigh.compareTo(new BigDecimal(5)) > 0) {
+            System.out.println("fcoin买一价" + fcoinBuyOnePrice + "---blo卖一价" + bloexSellOnePrice + "---可以套利：" + fcoinHigh);
 
         }
     }
