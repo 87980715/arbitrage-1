@@ -84,16 +84,33 @@ public class FcoinApiServiceImpl implements FcoinApiService {
     public String symbols() {
         String url = getUrlPre() + SYMBOL;
         String httpResponse = doGet(url);
-        JsonArray jsonArray = new JsonParser().parse(httpResponse).getAsJsonObject().get("data").getAsJsonArray();
-        for (JsonElement object : jsonArray) {
-            Symbol symbol = new Symbol();
-            symbol.setName(object.getAsJsonObject().get("name").getAsString());
-            symbol.setPlatform("Fcoin");
-            symbol.setPriceDecimal(object.getAsJsonObject().get("price_decimal").getAsInt());
-            symbol.setAmountDecimal(object.getAsJsonObject().get("amount_decimal").getAsInt());
-            symbol.setTradeable(object.getAsJsonObject().get("tradable").getAsBoolean());
-            symbolService.save(symbol);
-        }
+//        JsonArray jsonArray = new JsonParser().parse(httpResponse).getAsJsonObject().get("data").getAsJsonArray();
+//        for (JsonElement object : jsonArray) {
+//            Symbol symbol = new Symbol();
+//            symbol.setName(object.getAsJsonObject().get("name").getAsString());
+//            symbol.setPlatform("Fcoin");
+//            symbol.setPriceDecimal(object.getAsJsonObject().get("price_decimal").getAsInt());
+//            symbol.setAmountDecimal(object.getAsJsonObject().get("amount_decimal").getAsInt());
+//            symbol.setTradeable(object.getAsJsonObject().get("tradable").getAsBoolean());
+//            symbol.setType("futures");
+//            if (symbol.getName().contains("eth")){
+//                symbol.setArea("eth");
+//                symbol.setType("spot");
+//            }
+//            if (symbol.getName().contains("btc")){
+//                symbol.setArea("btc");
+//                symbol.setType("spot");
+//            }
+//            if (symbol.getName().contains("usdt")){
+//                symbol.setArea("usdt");
+//                symbol.setType("spot");
+//            }
+//            if (symbol.getName().contains("ft")){
+//                symbol.setArea("ft");
+//                symbol.setType("spot");
+//            }
+//            symbolService.save(symbol);
+//        }
         return httpResponse;
     }
 
