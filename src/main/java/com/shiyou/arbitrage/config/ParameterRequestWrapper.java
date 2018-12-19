@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * FileName: ParameterRequestWrapper
  * Description:
- * Author: ZhangYX
+ * Author:
  * Date:  2017/12/4
  */
 public class ParameterRequestWrapper extends HttpServletRequestWrapper {

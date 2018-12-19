@@ -8,6 +8,8 @@ import com.shiyou.arbitrage.cache.PlatformInfoCache;
 import com.shiyou.arbitrage.common.ObjectMapper;
 import com.shiyou.arbitrage.data.model.*;
 import com.shiyou.arbitrage.service.contract.BloexApiService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
@@ -25,6 +27,7 @@ import java.util.Map;
 @Service
 public class BloexApiServiceImpl implements BloexApiService {
 
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public static final String TICKER = "/ticker/get?";
     public static final String DEPTH = "/trade/depth/get";
@@ -266,13 +269,17 @@ public class BloexApiServiceImpl implements BloexApiService {
     }
 
     private <T> T getResult(Type type, String url, Map<String, String> params, boolean isSignature) {
-        String response;
-        addTimeStamp(params);
-        if (isSignature) {
-            String signature = SignatureUtil.buildSignature(params, getApiKey(), getSecrect());
-            response = api.getData(url, params, signature);
-        } else {
-            response = api.getDataWithOutSignature(url, params);
+        String response = null;
+        try {
+            addTimeStamp(params);
+            if (isSignature) {
+                String signature = SignatureUtil.buildSignature(params, getApiKey(), getSecrect());
+                response = api.getData(url, params, signature);
+            } else {
+                response = api.getDataWithOutSignature(url, params);
+            }
+        }catch (Exception e){
+            logger.error("BloexApi获取数据异常："+e.getMessage(), e);
         }
         return ObjectMapper.fromJson(response, type);
     }
