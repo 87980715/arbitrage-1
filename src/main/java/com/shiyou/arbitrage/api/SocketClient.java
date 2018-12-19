@@ -4,6 +4,7 @@ import com.shiyou.arbitrage.task.HeartTask;
 import com.shiyou.arbitrage.task.TaskScheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
 import java.io.IOException;
@@ -62,7 +63,8 @@ public class SocketClient {
 
     @OnClose
     public void onClose() {
-        logger.info("Websocket closed");
+        logger.info("Websocket closed, reconnect ... ...");
+        start();
     }
 
 
@@ -86,6 +88,6 @@ public class SocketClient {
     public void reConnect() {
 
         start();
-        logger.info("webSocket reconnect ...... ");
+        logger.info("webSocket reconnect ... ... ");
     }
 }

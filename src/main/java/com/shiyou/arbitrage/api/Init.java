@@ -1,5 +1,6 @@
 package com.shiyou.arbitrage.api;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -16,11 +17,13 @@ import com.shiyou.arbitrage.service.contract.BloexApiService;
 import com.shiyou.arbitrage.service.contract.FcoinApiService;
 import com.shiyou.arbitrage.service.contract.PlatformInfoService;
 import com.shiyou.arbitrage.task.TaskScheduler;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.*;
 
 import static com.shiyou.arbitrage.data.model.Contant.BLOEX;
 import static com.shiyou.arbitrage.data.model.Contant.FCOIN;
@@ -48,8 +51,19 @@ public class Init {
         loadBloexContractAccount();
 
         for (String coin : coins) {
-            new SocketClient(BLOEX, coin, PlatformInfoCache.getInfo(BLOEX, "socketUrl")).start();
-            new SocketClient(FCOIN, coin.toLowerCase(), PlatformInfoCache.getInfo(FCOIN, "socketUrl")).start();
+
+            ThreadFactory namedThreadFactory = new ThreadFactoryBuilder()
+                    .setNameFormat("demo-pool-%d").build();
+            ExecutorService singleThreadPool = new ThreadPoolExecutor(2, 5,
+                    0L, TimeUnit.MILLISECONDS,
+                    new LinkedBlockingQueue<Runnable>(1024), namedThreadFactory, new ThreadPoolExecutor.AbortPolicy());
+
+            singleThreadPool.execute(()-> new SocketClient(BLOEX, coin, PlatformInfoCache.getInfo(BLOEX, "socketUrl")).start());
+            singleThreadPool.execute(()-> new SocketClient(FCOIN, coin.toLowerCase(), PlatformInfoCache.getInfo(FCOIN, "socketUrl")).start());
+
+
+//            new SocketClient(BLOEX, coin, PlatformInfoCache.getInfo(BLOEX, "socketUrl")).start();
+//            new SocketClient(FCOIN, coin.toLowerCase(), PlatformInfoCache.getInfo(FCOIN, "socketUrl")).start();
             //new SocketClient(Contant.COIN58, coin.toLowerCase(), PlatformInfoCache.getInfo(Contant.COIN58, "socketUrl")).start();
             TaskScheduler.startBloexDepth(coin);
             TaskScheduler.startArbitrage(coin);
