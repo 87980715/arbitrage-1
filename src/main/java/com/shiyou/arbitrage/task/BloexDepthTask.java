@@ -25,9 +25,14 @@ public class BloexDepthTask extends TimerTask {
 
     @Override
     public void run() {
-        ApiResult<TradeDepth> apiResult = apiService.getTradeDepth(symbol);
-        TradeDepth tradeDepth = apiResult.getData();
-        BloexOrderCache.update(symbol, tradeDepth);
+        try {
+            ApiResult<TradeDepth> apiResult = apiService.getTradeDepth(symbol);
+            TradeDepth tradeDepth = apiResult.getData();
+            BloexOrderCache.update(symbol, tradeDepth);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
 
     }
 }

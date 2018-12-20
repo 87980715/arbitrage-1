@@ -26,34 +26,38 @@ public class ArbitrageTask extends TimerTask {
 
     @Override
     public void run() {
-        TradeDepth bloexDepth = BloexOrderCache.getTradeDepth(symbol);
-        TradeDepth fcoinDepth = FcoinOrderCache.getTradeDepth(symbol.toLowerCase());
+        try {
+            TradeDepth bloexDepth = BloexOrderCache.getTradeDepth(symbol);
+            TradeDepth fcoinDepth = FcoinOrderCache.getTradeDepth(symbol.toLowerCase());
 
-        LinkedList<BigDecimal[]> bloexBids = bloexDepth.getBids();
-        LinkedList<BigDecimal[]> bloexasks = bloexDepth.getAsks();
-        LinkedList<BigDecimal[]> fcoinBids = fcoinDepth.getBids();
-        LinkedList<BigDecimal[]> fcoinAsks = fcoinDepth.getAsks();
+            LinkedList<BigDecimal[]> bloexBids = bloexDepth.getBids();
+            LinkedList<BigDecimal[]> bloexasks = bloexDepth.getAsks();
+            LinkedList<BigDecimal[]> fcoinBids = fcoinDepth.getBids();
+            LinkedList<BigDecimal[]> fcoinAsks = fcoinDepth.getAsks();
 
-        BigDecimal bloexBuyOnePrice = bloexBids.get(0)[0]; //买一价
-        BigDecimal bloexBuyOnevolume = bloexBids.get(0)[1]; //买一量
-        BigDecimal fcoinBuyOnePrice = fcoinBids.get(0)[0];
-        BigDecimal fcoinBuyOnevolume = fcoinBids.get(0)[1];
+            BigDecimal bloexBuyOnePrice = bloexBids.get(0)[0]; //买一价
+            BigDecimal bloexBuyOnevolume = bloexBids.get(0)[1]; //买一量
+            BigDecimal fcoinBuyOnePrice = fcoinBids.get(0)[0];
+            BigDecimal fcoinBuyOnevolume = fcoinBids.get(0)[1];
 
-        BigDecimal bloexSellOnePrice = bloexasks.get(0)[0];//卖一价
-        BigDecimal bloexSellOnevolume = bloexasks.get(0)[1];//卖一量
-        BigDecimal fcoinSellOnePrice = fcoinAsks.get(0)[0];
-        BigDecimal fcoinSellOnevolume = fcoinAsks.get(0)[1];
-        BigDecimal bloHigh = bloexBuyOnePrice.subtract(fcoinSellOnePrice);
-        BigDecimal fcoinHigh = fcoinBuyOnePrice.subtract(bloexSellOnePrice);
+            BigDecimal bloexSellOnePrice = bloexasks.get(0)[0];//卖一价
+            BigDecimal bloexSellOnevolume = bloexasks.get(0)[1];//卖一量
+            BigDecimal fcoinSellOnePrice = fcoinAsks.get(0)[0];
+            BigDecimal fcoinSellOnevolume = fcoinAsks.get(0)[1];
+            BigDecimal bloHigh = bloexBuyOnePrice.subtract(fcoinSellOnePrice);
+            BigDecimal fcoinHigh = fcoinBuyOnePrice.subtract(bloexSellOnePrice);
 
-        if (bloHigh.compareTo(new BigDecimal(5)) > 0) {
-            System.out.println("blo买一价" + bloexBuyOnePrice + "---fcoin卖一价" + fcoinSellOnePrice + "---可以套利：" + bloHigh);
+            if (bloHigh.compareTo(new BigDecimal(5)) > 0) {
+                System.out.println("blo买一价" + bloexBuyOnePrice + "---fcoin卖一价" + fcoinSellOnePrice + "---可以套利：" + bloHigh);
 
-        }
+            }
 
-        if (fcoinHigh.compareTo(new BigDecimal(5)) > 0) {
-            System.out.println("fcoin买一价" + fcoinBuyOnePrice + "---blo卖一价" + bloexSellOnePrice + "---可以套利：" + fcoinHigh);
+            if (fcoinHigh.compareTo(new BigDecimal(5)) > 0) {
+                System.out.println("fcoin买一价" + fcoinBuyOnePrice + "---blo卖一价" + bloexSellOnePrice + "---可以套利：" + fcoinHigh);
 
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

@@ -19,7 +19,7 @@ import java.util.List;
  * @Date: 2018/12/17 0017 14:26
  */
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/symbol")
 public class SymbolController {
 
     @Autowired
