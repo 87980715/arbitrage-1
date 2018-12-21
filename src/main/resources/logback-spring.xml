@@ -3,7 +3,7 @@
     <include resource="org/springframework/boot/logging/logback/base.xml" />
 
     <property name="logback.dir" value="./tmp/logs"/>
-    <property name="logback.name" value="admin-web-application"/>
+    <property name="logback.name" value="arbitrage"/>
 
     <appender name="fileInfoLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!--如果只是想要 Info 级别的日志，只是过滤 info 还是会输出 Error 日志，因为 Error 的级别高，
